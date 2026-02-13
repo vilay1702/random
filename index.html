@@ -161,6 +161,17 @@
 
         <h1>Will you go on a Valentine's date with me?</h1>
 
+        <p
+          id="reason-text"
+          style="
+            color: var(--heart);
+            min-height: 1.5rem;
+            font-size: 1.2rem;
+            margin: 10px 0;
+            font-style: italic;
+          "
+        ></p>
+
         <div class="button-zone">
           <button id="yesBtn">YES!</button>
           <button id="noBtn">No</button>
@@ -176,7 +187,11 @@
           alt="Hearts"
         />
         <h1 style="color: var(--heart)">It's a Date! ❤️</h1>
-        <p>I can’t wait to see you!</p>
+        <p>
+          I knew you’d say yes! 😉
+          <br />
+          Can’t wait to see you!
+        </p>
       </div>
     </div>
 
@@ -188,40 +203,52 @@
 
       let clickCount = 0;
 
+      // Add this list of messages at the top of your script
+      const noMessages = [
+        "Are you sure? 🥺",
+        "Think again! 🌸",
+        "But I'll be so sad... 😭",
+        "I'll buy you chocolate! 🍫",
+        "Last chance to say yes! ✨",
+        "You're breaking my heart! ❤️‍🩹",
+        "Okay, now you're just teasing me! 😂",
+      ];
+
       const handleNo = () => {
         clickCount++;
 
-        // 1. Define a generous safety margin from the viewport edges
-        const margin = 50;
+        // --- NEW: Update the cute text on the note ---
+        const reasonDisplay = document.getElementById("reason-text");
+        if (clickCount <= noMessages.length) {
+          reasonDisplay.innerText = noMessages[clickCount - 1];
+        } else {
+          reasonDisplay.innerText = "Okay, fine! You win... or do you? 😉";
+        }
 
-        // 2. Get the actual visible area (Viewport)
+        // --- Keep your existing teleport logic below ---
+        const margin = 50;
         const vWidth = window.innerWidth;
         const vHeight = window.innerHeight;
 
-        // 3. Calculate the maximum safe coordinates
-        // We subtract the button size AND the margin from the total width/height
         const maxX = vWidth - noBtn.offsetWidth - margin;
         const maxY = vHeight - noBtn.offsetHeight - margin;
 
-        // 4. Generate random coordinates within the safe range
-        // Math.max(margin, ...) ensures it doesn't go below the top/left margin
         const randomX = Math.max(margin, Math.floor(Math.random() * maxX));
         const randomY = Math.max(margin, Math.floor(Math.random() * maxY));
 
-        // 5. Apply the coordinates
         noBtn.style.position = "fixed";
         noBtn.style.left = `${randomX}px`;
         noBtn.style.top = `${randomY}px`;
 
-        // 6. Optional: Small rotation to keep the "hand-drawn" look
-        const randomRot = Math.random() * 20 - 10; // -10 to +10 degrees
+        const randomRot = Math.random() * 20 - 10;
         noBtn.style.transform = `rotate(${randomRot}deg)`;
 
         if (clickCount > 12) {
           noBtn.style.display = "none";
+          reasonDisplay.innerText =
+            "The 'No' button went on vacation. Try 'Yes'! ❤️";
         }
       };
-
       // Handle both hover and touch
       noBtn.addEventListener("mouseover", handleNo);
       noBtn.addEventListener("touchstart", (e) => {
