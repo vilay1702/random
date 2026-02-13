@@ -17,7 +17,6 @@
         --rose: #ff4d6d;
         --cream: #fffaf0;
         --ink: #4a4a4a;
-        --sky: #a2d2ff;
       }
 
       body,
@@ -27,13 +26,10 @@
         width: 100%;
         height: 100%;
         overflow: hidden;
-        background-color: var(
-          --blush
-        ); /* Match scratch color for seamless feel */
+        background-color: var(--blush);
         font-family: "Gochi Hand", cursive;
       }
 
-      /* Hidden Content Layer */
       .content-layer {
         position: absolute;
         top: 0;
@@ -48,24 +44,23 @@
         z-index: 1;
       }
 
-      /* The Polaroid Frame */
       .polaroid {
         background: white;
-        padding: 15px 15px 60px 15px;
+        padding: 15px 15px 40px 15px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         transform: rotate(-2deg);
         border: 1px solid #eee;
         display: flex;
         flex-direction: column;
         align-items: center;
-        max-width: 85%;
+        width: 85%;
+        max-width: 320px;
         animation: float 4s ease-in-out infinite;
       }
 
       .doodle-img {
-        width: 180px;
-        height: 180px;
-        object-fit: cover;
+        width: 100%;
+        height: auto;
         border-radius: 2px;
       }
 
@@ -73,23 +68,30 @@
         font-family: "Caveat", cursive;
         font-size: 2.2rem;
         color: var(--rose);
-        margin: 20px 0 5px 0;
+        margin: 15px 0 5px 0;
       }
 
-      p {
-        font-size: 1.2rem;
+      .main-q {
+        font-size: 1.3rem;
         color: var(--ink);
         margin: 0;
+      }
+
+      #message-text {
+        color: var(--rose);
+        font-size: 1.1rem;
+        min-height: 1.4rem;
+        margin: 10px 0;
+        font-style: italic;
         text-align: center;
       }
 
-      /* Buttons */
       .btn-zone {
-        margin-top: 25px;
         display: flex;
-        gap: 20px;
+        gap: 15px;
         position: relative;
-        z-index: 20; /* Ensure buttons are above everything */
+        z-index: 20;
+        margin-top: 5px;
       }
 
       button {
@@ -100,7 +102,6 @@
         border-radius: 50px;
         cursor: pointer;
         background: white;
-        transition: transform 0.2s;
       }
 
       #yesBtn {
@@ -110,13 +111,6 @@
         animation: heartBeat 1.5s infinite;
       }
 
-      #noBtn {
-        color: var(--ink);
-        background: white;
-        position: relative;
-      }
-
-      /* Scratch Canvas */
       #scratch-canvas {
         position: absolute;
         top: 0;
@@ -129,17 +123,15 @@
 
       .instruction {
         position: fixed;
-        top: 40%;
+        top: 45%;
         width: 100%;
         text-align: center;
         color: white;
         font-size: 1.8rem;
         z-index: 11;
         pointer-events: none;
-        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
       }
 
-      /* Success Screen */
       .success-screen {
         position: fixed;
         top: 0;
@@ -162,7 +154,7 @@
           transform: translateY(0) rotate(-2deg);
         }
         50% {
-          transform: translateY(-10px) rotate(1deg);
+          transform: translateY(-10px) rotate(1.5deg);
         }
       }
 
@@ -186,20 +178,21 @@
     </style>
   </head>
   <body>
-    <div class="instruction" id="hint">Scratch here... ✨</div>
+    <div class="instruction" id="hint">Scratch to reveal... ✨</div>
 
     <div class="content-layer">
       <div class="polaroid">
         <img
           src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpndWp3ZzR4eHpxZzR4eHpxZzR4eHpxZzR4eHpxZzR4eHpxJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/c76IJLufpNwSULPk77/giphy.gif"
           class="doodle-img"
-          alt="Love Bear"
         />
-        <h1 id="nameTag">Hi [Name]!</h1>
-        <p>Will you go on a date with me?</p>
+        <h1 id="nameTag">Hi Beautiful!</h1>
+        <p class="main-q">Will you be my Valentine?</p>
+
+        <div id="message-text"></div>
 
         <div class="btn-zone">
-          <button id="yesBtn">YES! ❤️</button>
+          <button id="yesBtn">YES!</button>
           <button id="noBtn">No</button>
         </div>
       </div>
@@ -208,36 +201,47 @@
     <canvas id="scratch-canvas"></canvas>
 
     <div class="success-screen" id="success">
-      <h1 style="color: white; font-size: 3.5rem">Yay! 🥰</h1>
-      <p style="color: white; font-size: 1.5rem">
+      <h1 style="color: white; font-size: 3rem">Yay! 🥰</h1>
+      <p style="color: white; font-size: 1.4rem; padding: 0 20px">
         I knew you'd say yes! <br />
-        Counting down the hours... ✨🌹
+        I can’t wait to see you! ✨🌹
       </p>
     </div>
 
     <script>
       const canvas = document.getElementById("scratch-canvas");
       const ctx = canvas.getContext("2d");
-      const hint = document.getElementById("hint");
+      const messageText = document.getElementById("message-text");
+      const noBtn = document.getElementById("noBtn");
+      const yesBtn = document.getElementById("yesBtn");
 
-      // --- 1. SET THE NAME HERE ---
-      const herName = "Beautiful";
-      document.getElementById("nameTag").innerText = `Hi ${herName}!`;
+      const noMessages = [
+        "Are you sure? 🥺",
+        "Think again! 🌸",
+        "But I'll be so sad...",
+        "I'll buy you chocolate! 🍫",
+        "Last chance! ✨",
+        "You're breaking my heart! ❤️",
+        "Wrong button! 😂",
+        "Still trying? 😉",
+        "Almost gone...",
+        "Bye bye No button! 👋",
+      ];
 
       let isDrawing = false;
-      let clearedPixels = 0;
+      let scratchCount = 0;
+      let noClickCount = 0;
 
       function init() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        // Background of the scratch layer
+        // Draw the scratch layer
         ctx.fillStyle = "#ffb7b2";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Add some decorative hearts to the scratch surface
-        ctx.font = "40px Arial";
-        ctx.textAlign = "center";
+        // Add some hearts
+        ctx.font = "30px Arial";
         for (let i = 0; i < 15; i++) {
           ctx.fillText(
             "❤️",
@@ -245,62 +249,53 @@
             Math.random() * canvas.height
           );
         }
+
+        // --- ADD THIS LINE TO SHOW THE CARD ONLY AFTER CANVAS IS PAINTED ---
+        document.querySelector(".content-layer").style.opacity = "1";
       }
 
       function scratch(x, y) {
         ctx.globalCompositeOperation = "destination-out";
         ctx.beginPath();
-        ctx.arc(x, y, 45, 0, Math.PI * 2);
+        ctx.arc(x, y, 40, 0, Math.PI * 2);
         ctx.fill();
-        checkScratchAmount();
-      }
-
-      // Check how much has been scratched
-      function checkScratchAmount() {
-        clearedPixels++;
-        // After a bit of scratching, fade the hint
-        if (clearedPixels > 20) hint.style.opacity = "0";
-
-        // If they scratch a decent amount, make the canvas non-blocking
-        if (clearedPixels > 150) {
+        scratchCount++;
+        if (scratchCount > 10)
+          document.getElementById("hint").style.opacity = "0";
+        if (scratchCount > 150) {
           canvas.style.pointerEvents = "none";
           canvas.style.opacity = "0";
-          setTimeout(() => canvas.remove(), 1000);
         }
       }
 
-      // Event Listeners for Scratching
       canvas.addEventListener("mousedown", () => (isDrawing = true));
       canvas.addEventListener("mouseup", () => (isDrawing = false));
-      canvas.addEventListener("mousemove", (e) => {
-        if (isDrawing) scratch(e.clientX, e.clientY);
-      });
-
+      canvas.addEventListener(
+        "mousemove",
+        (e) => isDrawing && scratch(e.clientX, e.clientY)
+      );
       canvas.addEventListener("touchstart", (e) => {
         isDrawing = true;
-        const touch = e.touches[0];
-        scratch(touch.clientX, touch.clientY);
+        scratch(e.touches[0].clientX, e.touches[0].clientY);
       });
-      canvas.addEventListener("touchmove", (e) => {
-        if (isDrawing) {
-          const touch = e.touches[0];
-          scratch(touch.clientX, touch.clientY);
+      canvas.addEventListener(
+        "touchmove",
+        (e) => isDrawing && scratch(e.touches[0].clientX, e.touches[0].clientY)
+      );
+
+      function handleNo() {
+        noClickCount++;
+
+        if (noClickCount >= 10) {
+          noBtn.style.display = "none";
+          messageText.innerText =
+            "The 'No' button went on vacation. Try 'Yes'! ❤️";
+          return;
         }
-      });
 
-      // 2. Button Logic
-      const noBtn = document.getElementById("noBtn");
-      const yesBtn = document.getElementById("yesBtn");
-      const success = document.getElementById("success");
+        messageText.innerText = noMessages[noClickCount - 1];
 
-      noBtn.addEventListener("mouseover", moveButton);
-      noBtn.addEventListener("touchstart", (e) => {
-        e.preventDefault();
-        moveButton();
-      });
-
-      function moveButton() {
-        const padding = 50;
+        const padding = 60;
         const x = Math.max(
           padding,
           Math.random() * (window.innerWidth - noBtn.offsetWidth - padding)
@@ -314,11 +309,17 @@
         noBtn.style.top = y + "px";
       }
 
-      yesBtn.addEventListener("click", () => {
-        success.style.display = "flex";
+      noBtn.addEventListener("mouseover", handleNo);
+      noBtn.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        handleNo();
       });
 
-      window.onload = init;
+      yesBtn.addEventListener("click", () => {
+        document.getElementById("success").style.display = "flex";
+      });
+
+      init();
     </script>
   </body>
 </html>
